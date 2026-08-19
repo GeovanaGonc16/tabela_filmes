@@ -1,30 +1,26 @@
 GET http://localhost:3000/
 
 ###
-
-POST http://localhost:3000/create-task
+POST http://localhost:3000/create
 Content-Type: application/json
 
 {
-    "id": 1,
-    "name": "Ainda Estou Aqui",
-    "genero": "Drama",
-    "duracao": 137,
-    "classiEtaria": 14
+    "title": "Homem-Aranha: Sem Volta Pra Casa",
+    "gender": "Ação / Aventura",
+    "ageLimit": 14,
+    "duration": 145
 }
 
 ###
-
-DELETE http://localhost:3000/delete-task
+DELETE http://localhost:3000/delete/13
 
 ###
-
-PUT http://localhost:3000/update-movie
+PUT http://localhost:3000/update/2
 Content-Type: application/json
 
 {
-    "name": "Ainda Estou Aqui",
-    "genero": "Drama",
-    "duracao": 137,
-    "classiEtaria": 12
+    "title": "O Senhor dos Anéis: As Duas Torres",
+    "gender": "Comédia",
+    "ageLimit": 18,
+    "duration": 189
 }

@@ -1,47 +1,48 @@
-import express, { request, response } from "express"
+import express from "express"
 import mysql2 from "mysql2"
+import cors from "cors"
 
 const app = express()
 
 app.use(express.json())
-
+app.use(cors())
 app.get("/", (request, response) => {
-    response.json({
-        message: "Servidor de FilmesGege"
-    })
-})
+    const selectCommand = "SELECT * FROM filmes_GeovanaGoncalves"
 
-app.post("/create-task", (request, response) => {
-    
-    const { name, genero, duracao, classiEtaria } = request.body
-
-    const insertCommand = "INSERT INTO filmes_GeovanaGoncalves (name, genero, duracao, classiEtaria) VALUES (?, ?, ?, ?)"
-
-    sql.query(insertCommand, [name, genero, duracao, classiEtaria], (error) =>{
-
-        if(error){
+    sql.query(selectCommand, (error, data) => {
+        if (error) {
             console.log(error)
             return
         }
 
-        response.status(201).json ({
-            message: "Filme cadastrado com sucesso"
+        response.json(data)
+    })
+})
+
+app.post("/create", (request, response) => {
+    const { title, gender, ageLimit, duration } = request.body
+
+    const insertCommand = "INSERT INTO filmes_GeovanaGoncalves(title, gender, ageLimit, duration) VALUES (?, ?, ?, ?)"
+
+    sql.query(insertCommand, [title, gender, ageLimit, duration], (error) => {
+        if(error) {
+            console.log(error)
+            return
+        }
+
+        response.status(201).json({
+            message: "Filme cadastrado com sucesso!"
         })
     })
 })
 
-app.listen(3000, ()=>{
-    console.log("Servidor online")
-})
-
-app.delete("/delete-task/:id", (request, response) => {
-    console.log(request.params.id)
-    const {id} = request.params
+app.delete("/delete/:id", (request, response) => {
+    const { id } = request.params
 
     const deleteCommand = "DELETE FROM filmes_GeovanaGoncalves WHERE id=?"
 
     sql.query(deleteCommand, [id], (error) => {
-        if(error){
+        if (error) {
             console.log(error)
             return
         }
@@ -52,25 +53,34 @@ app.delete("/delete-task/:id", (request, response) => {
     })
 })
 
-app.put("/update-movie", (request, response)=> {
-    const { name, genero, duracao, classiEtaria} = request.body
+app.put("/update/:id", (request, response) => {
+    const { id } = request.params
+    const { title, gender, ageLimit, duration } = request.body
 
-    const updateCommand = "UPDATE name, genero, duracao, classiEtaria WHERE id = ? FROM filmes_GeovanaGoncalves"
+    let updateCommand = "UPDATE filmes_GeovanaGoncalves SET title = ?, gender = ?, ageLimit = ?, duration = ? WHERE id = ?"
 
-    sql.query(updateCommand, [id], (error)=>{
-        if(error){
-            console.log (error)
+    sql.query(updateCommand, [title, gender, ageLimit, duration, id], (error) => {
+        if (error) {
+            console.log(error)
             return
         }
 
-        response.json({message: "Filme atualizado com sucesso"})
+        response.json({
+            message: "Filme alterado com sucesso!"
+        })
     })
 })
 
 
+app.listen(3000, () => {
+    console.log("Servidor online")
+})
+
 const sql = mysql2.createPool({
     host: "benserverplex.ddns.net",
     user: "alunos",
-    password:"senhaAlunos",
-    database:"alunos_filmes03MB"
+    password: "senhaAlunos",
+    database: "alunos_filmes03MB"
 })
+
+
