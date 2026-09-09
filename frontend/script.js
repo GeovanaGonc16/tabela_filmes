@@ -12,9 +12,23 @@ async function buscarFilmes() {
                         <p><strong>Gênero:</strong> ${filme.gender}</p>
                         <p><strong>Duração:</strong> ${filme.duration} minutos</p>
                         <p><strong>Classificação indicativa:</strong> ${filme.ageLimit > 0 ? filme.ageLimit + ' anos' : 'Livre'}</p>
+
+                        <button onclick="apagarFilme(${filme.id})">Apagar</button>
+
+                        
                     </div>
                 `
     })
 }
 
+
 buscarFilmes()
+
+async function apagarFilme(id) {
+    const respostaDeSucessoAoApagar = await fetch(`https://tabela-filmes-gamma.vercel.app/delete/${id}`, { method: "DELETE" })
+    const mensagem = await respostaDeSucessoAoApagar.json()
+
+    alert(mensagem.message)
+
+    window.location.reload()
+}
